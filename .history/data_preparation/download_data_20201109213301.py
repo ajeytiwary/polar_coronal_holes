@@ -23,7 +23,7 @@ p.add_argument('-data_path', type=str, default='coronal_hole_heliohackweek/data/
                help='Download Path')
 p.add_argument('-startdate', type=str, default='2011/05/10 11:06',
                help='Start date and time in dd/mm/yyyy hhmm')
-p.add_argument('-enddate', type=str, default='2011/06/10 12:06',
+p.add_argument('-enddate', type=str, default='2011/06/10 11:06',
                help='end date and time in dd/mm/yyyy hhmm')
 p.add_argument('-wavelengths', type=int, default=[170,304],
                 help='wavelengths min and max')
@@ -59,7 +59,7 @@ print(fethched_results)
 files = Fido.fetch(fethched_results,path=args.data_path)
 
 while not files.errors:
-    time.sleep(10)
+    time.sleep(30)
     files=Fido.fetch(files)
     
 '''
@@ -75,10 +75,10 @@ for file in eit:
 
 for file in euvi_l:
     header_ = getheader(file)
-    os.rename(file,args.data_path+'EUVI-A_'+str(header_.get('date-obs'))+'_'+str(header_.get('wavelnth'))+'.fits')
+    os.rename(file,args.data_path+'EUVI-A_'+str(header_.get('date_obs'))+'_'+str(header_.get('wavelnth'))+'.fits')
 for file in euvi_r:
     header_ = getheader(file)
-    os.rename(file,args.data_path+'EUVI-B_'+str(header_.get('date-obs'))+'_'+str(header_.get('wavelnth'))+'.fits')
+    os.rename(file,args.data_path+'EUVI-B_'+str(header_.get('date_obs'))+'_'+str(header_.get('wavelnth'))+'.fits')
 
 
 print('All files downloaded successfully and files named appropriately renamed')

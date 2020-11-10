@@ -75,10 +75,10 @@ for file in eit:
 
 for file in euvi_l:
     header_ = getheader(file)
-    os.rename(file,args.data_path+'EUVI-A_'+str(header_.get('date-obs'))+'_'+str(header_.get('wavelnth'))+'.fits')
+    os.rename(file,args.data_path+'EUVI-A_'+str(header_.get('date_obs'))+'_'+str(header_.get('wavelnth'))+'.fits')
 for file in euvi_r:
     header_ = getheader(file)
-    os.rename(file,args.data_path+'EUVI-B_'+str(header_.get('date-obs'))+'_'+str(header_.get('wavelnth'))+'.fits')
+    os.rename(file,args.data_path+'EUVI-B_'+str(header_.get('date_obs'))+'_'+str(header_.get('wavelnth'))+'.fits')
 
 
 print('All files downloaded successfully and files named appropriately renamed')
