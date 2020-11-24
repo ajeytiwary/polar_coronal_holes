@@ -105,12 +105,6 @@ def combine_maps(maps_list):
 
     # Combined maps_list
     maps_list[0]=eit_correction(maps_list[0])
-    # where_mask = mask_outside_disk(maps_list[0])
-    # maps_list[0].data[where_mask] = np.nan
-    # where_mask = mask_outside_disk(maps_list[1])
-    # maps_list[1].data[where_mask] = np.nan
-    # where_mask = mask_outside_disk(maps_list[2])
-    # maps_list[2].data[where_mask] = np.nan
     shape_out = (180, 360)  # This is set deliberately low to reduce memory consumption
     header = sunpy.map.make_fitswcs_header(shape_out,
                                            SkyCoord(0, 0, unit=u.deg,
@@ -275,4 +269,60 @@ for files in observations_195:
     outmap.nickname = 'EIT + EUVI/A + EUVI/B'
 
     # Output
-    outmap.save(path_to_files+files[0].split('_')[-2][0:-1]+'.fits', filetype='fits', overwrite=True) 
+    outmap.save(path_to_files+files[0].split('_')[-2][0:-1]+'.fits', filetype='fits', overwrite=True)    
+
+
+
+
+eit_maps = sunpy.map.Map(filenames_eit)
+nx_eit, ny_eit = eit_maps[0].data.shape
+
+euvil_maps = sunpy.map.Map(filenames_euvil)
+nx_euvil, ny_euvil = euvil_maps[0].data.shape
+
+euvir_maps = sunpy.map.Map(filenames_euvir)
+nx_euvir, ny_euvir = euvir_maps[0].data.shape
+
+
+ 
+
+for file_nb in range(len(list_channels)):    
+    # Make map objects for one channel
+    eit_maps_171 = sunpy.map.Map(filenames_eit_171)
+    euvil_maps_171= sunpy.map.Map(filenames_euvil_171)
+    euvir_maps_171 = sunpy.map.Map(filenames_euvir_171)
+    eit_maps_171=eit_correction(eit_maps_171)
+
+    filename_extract = filenames_eit_0[file_nb].split(path_to_files+str(list_channels[0]))
+    
+    filename_output = output_path + 'composite_' + filename_extract[1]
+    print(filename_extract)
+    print('here')
+    nx_eit_171, ny_eit_171 = eit_maps_171.data.shape
+    nx_euvil, ny_euvil = euvil_maps_171.data.shape
+    nx_euvir, ny_euvir = euvir_maps_171.data.shape    
+
+    
+    # Check positioning of instruments in order to cover full Sun
+
+    
+
+            # Mask everything outside the solar disk
+            where_mask = mask_outside_disk(eit_maps)
+            eit_maps.data[where_mask] = np.nan
+            where_mask = mask_outside_disk(euvil_maps)
+            euvil_maps.data[where_mask] = np.nan
+            where_mask = mask_outside_disk(euvir_maps)
+            euvir_maps.data[where_mask] = np.nan
+            maps_list=[eit_maps,euvil_maps,euvir_maps]
+            # Wavelet enchancement of the EIT data for improved contrast
+            # Missing Step ######################
+            # arr_tmp = eit_maps.data
+            # eit_maps.data = wavelet_enhancement(arr_tmp)
+            # Homogenization of the EIT data /w respect to EUVI
+            outmap = combine_maps(maps_list)
+            outmap.plot_settings = maps_list[0].plot_settings
+            outmap.nickname = 'EIT + EUVI/A + EUVI/B'
+        
+            # Output
+            outmap.save(filename_output, filetype='fits', overwrite=True)

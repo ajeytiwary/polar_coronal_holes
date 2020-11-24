@@ -105,12 +105,12 @@ def combine_maps(maps_list):
 
     # Combined maps_list
     maps_list[0]=eit_correction(maps_list[0])
-    # where_mask = mask_outside_disk(maps_list[0])
-    # maps_list[0].data[where_mask] = np.nan
-    # where_mask = mask_outside_disk(maps_list[1])
-    # maps_list[1].data[where_mask] = np.nan
-    # where_mask = mask_outside_disk(maps_list[2])
-    # maps_list[2].data[where_mask] = np.nan
+    where_mask = mask_outside_disk(maps_list[0])
+    maps_list[0].data[where_mask] = np.nan
+    where_mask = mask_outside_disk(maps_list[1])
+    maps_list[1].data[where_mask] = np.nan
+    where_mask = mask_outside_disk(maps_list[2])
+    maps_list[2].data[where_mask] = np.nan
     shape_out = (180, 360)  # This is set deliberately low to reduce memory consumption
     header = sunpy.map.make_fitswcs_header(shape_out,
                                            SkyCoord(0, 0, unit=u.deg,
@@ -275,4 +275,5 @@ for files in observations_195:
     outmap.nickname = 'EIT + EUVI/A + EUVI/B'
 
     # Output
-    outmap.save(path_to_files+files[0].split('_')[-2][0:-1]+'.fits', filetype='fits', overwrite=True) 
+    outmap.save(path_to_files+files[0].split('_')[-2][0:-1]+'.fits', filetype='fits', overwrite=True)    
+
